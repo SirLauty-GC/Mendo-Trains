@@ -44,7 +44,7 @@ class Juego:
                     if VarGlob.modo_demolicion == True:
                         if event.button == 1:
                             mouse_x, mouse_y = pygame.mouse.get_pos()
-                            tile = self.nivel.detectar_tile(mouse_x, mouse_y, VarGlob.offset_x, VarGlob.offset_y)
+                            tile = self.nivel.detectar_via(mouse_x, mouse_y, VarGlob.offset_x, VarGlob.offset_y)
                             if tile:
                                 self.nivel.desstruir_via(tile)
 

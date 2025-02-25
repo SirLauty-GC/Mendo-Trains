@@ -22,6 +22,7 @@ class Nivel:
         self.obstaculo = pygame.sprite.Group()
 
         self.crear_mapa()
+        self.cargar_partida()
     
     def crear_mapa(self):
         tipos_terreno= {
@@ -37,6 +38,17 @@ class Nivel:
                     x = col_index_r * 32
                     y = row_index_r * 32
                     tipos_terreno[col]((x, y), [self.sprites_de_fondo, self.obstaculo])
+    
+    def cargar_partida(self):
+        tipos_tile= {
+            "v": Via
+        }
+        for row_index_r, row in enumerate(self.partida_guardada):
+            for col_index_r, col in enumerate(row):
+                if col in tipos_tile:
+                    x = col_index_r * 32
+                    y = row_index_r * 32
+                    tipos_tile[col]((x, y), [self.sprites_de_fondo, self.obstaculo])
 
     def movimiento_camara(self, offset_x=0, offset_y=0):
         self.sprites_de_fondo.update()
@@ -56,13 +68,41 @@ class Nivel:
     
     def construir_via(self, tile):
         if tile[0] == 'a':
-            pass
-        else:
-            tile_x = tile[1] * 32
-            tile_y = tile[2] * 32
-            tile = Via((tile_x, tile_y), [self.sprites_de_fondo, self.obstaculo])
+            return
+        fila, columna = tile[1], tile[2]
+        tile_x, tile_y = fila * 32, columna * 32
+        tile = Via((tile_x, tile_y), [self.sprites_de_fondo, self.obstaculo])
+        self.partida_guardada[columna][fila] = "v"
+        self.guardar_mapa_csv("partida_guardada.csv")  
+        if self.partida_guardada[columna][fila] == "v":
+            print("hecho bro")
+
+    def guardar_mapa_csv(self, archivo_csv):
+        ruta_completa = f"./partidas/{archivo_csv}"
+        with open(ruta_completa, "w", newline='', encoding="utf-8") as f:
+            writer = csv.writer(f)
+            writer.writerows(self.partida_guardada)
+    
+    def detectar_via(self, mouse_x, mouse_y, offset_x, offset_y):
+        global_x = mouse_x - offset_x
+        global_y = mouse_y - offset_y
+
+        tile_x = global_x // 32
+        tile_y = global_y // 32
+
+        if 0 <= tile_y < len(self.partida_guardada) and 0 <= tile_x < len(self.partida_guardada[0]):
+            print(self.partida_guardada[tile_y][tile_x], tile_x, tile_y)
+            return self.partida_guardada[tile_y][tile_x], tile_x, tile_y
+        return None
 
     def desstruir_via(self, tile):
-        tile_x = tile[1] * 32
-        tile_y = tile[2] * 32
-        Via.remove
+        if tile[0] == 'v':
+            print("Vía a destruir waawa")
+            fila, columna = tile[1], tile[2]
+            self.partida_guardada[columna][fila] = ""
+            self.guardar_mapa_csv("partida_guardada.csv")  
+            if self.partida_guardada[columna][fila] == "":
+                print("hecho bro")
+            for sprite in self.obstaculo:
+                if isinstance(sprite, Via) and sprite.rect.topleft == (fila * 32, columna * 32):
+                    sprite.kill()
