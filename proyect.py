@@ -6,8 +6,8 @@ from objets.interfaz_ui import Interfaz
 pygame.init()
 
 # Configuración de pantalla
-LIMITE_PANTALLA = 48
-VELOCIDAD_CAMARA = 8
+limite_pantalla = 48
+velocidad_camara = 8
 
 pygame.display.set_caption("Trenes")
 
@@ -50,14 +50,14 @@ class Juego:
 
             mouse_x, mouse_y = pygame.mouse.get_pos()
 
-            if mouse_x < LIMITE_PANTALLA:  # Izquierda
-                VarGlob.offset_x += VELOCIDAD_CAMARA
-            if mouse_x > VarGlob.ancho_pantalla - LIMITE_PANTALLA:  # Derecha
-                VarGlob.offset_x -= VELOCIDAD_CAMARA
-            if mouse_y < LIMITE_PANTALLA:  # Arriba
-                VarGlob.offset_y += VELOCIDAD_CAMARA
-            if mouse_y > VarGlob.alto_pantalla - LIMITE_PANTALLA:  # Abajo
-                VarGlob.offset_y -= VELOCIDAD_CAMARA
+            if mouse_x < limite_pantalla:  # Izquierda
+                VarGlob.offset_x += velocidad_camara
+            if mouse_x > VarGlob.ancho_pantalla - limite_pantalla:  # Derecha
+                VarGlob.offset_x -= velocidad_camara
+            if mouse_y < limite_pantalla:  # Arriba
+                VarGlob.offset_y += velocidad_camara
+            if mouse_y > VarGlob.alto_pantalla - limite_pantalla:  # Abajo
+                VarGlob.offset_y -= velocidad_camara
             
             screen.fill("black")
 
