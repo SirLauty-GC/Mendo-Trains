@@ -73,9 +73,7 @@ class Nivel:
         tile_x, tile_y = fila * 32, columna * 32
         tile = Via((tile_x, tile_y), [self.sprites_de_fondo, self.obstaculo])
         self.partida_guardada[columna][fila] = "v"
-        self.guardar_mapa_csv("partida_guardada.csv")  
-        if self.partida_guardada[columna][fila] == "v":
-            print("hecho bro")
+        self.guardar_mapa_csv("partida_guardada.csv")
 
     def guardar_mapa_csv(self, archivo_csv):
         ruta_completa = f"./partidas/{archivo_csv}"
@@ -91,18 +89,14 @@ class Nivel:
         tile_y = global_y // 32
 
         if 0 <= tile_y < len(self.partida_guardada) and 0 <= tile_x < len(self.partida_guardada[0]):
-            print(self.partida_guardada[tile_y][tile_x], tile_x, tile_y)
             return self.partida_guardada[tile_y][tile_x], tile_x, tile_y
         return None
 
     def desstruir_via(self, tile):
         if tile[0] == 'v':
-            print("Vía a destruir waawa")
             fila, columna = tile[1], tile[2]
             self.partida_guardada[columna][fila] = ""
-            self.guardar_mapa_csv("partida_guardada.csv")  
-            if self.partida_guardada[columna][fila] == "":
-                print("hecho bro")
+            self.guardar_mapa_csv("partida_guardada.csv")
             for sprite in self.obstaculo:
                 if isinstance(sprite, Via) and sprite.rect.topleft == (fila * 32, columna * 32):
                     sprite.kill()

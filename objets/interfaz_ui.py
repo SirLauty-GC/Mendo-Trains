@@ -20,4 +20,4 @@ class Interfaz:
         # Construccion
         Boton_constr(self.screen, self.x + 16, self.y + 10)
         # Demolicion
-        Boton_demol(self.screen, self.x + 16, self.y + 74)
+        Boton_demol(self.screen, self.x + 16, self.y + 84)
