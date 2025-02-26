@@ -13,4 +13,7 @@ modo_construccion = False
 modo_const_via_recta = False
 modo_const_via_codo = False
 modo_const_via_bifurcada = False
+
+modo_const_rotada = 0
+
 modo_demolicion = False

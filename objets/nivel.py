@@ -43,21 +43,29 @@ class Nivel:
                     tipos_terreno[col]((x, y), [self.sprites_de_fondo, self.obstaculo])
         VarGlob.ancho_mundo = (col_index_r + 1) * 32
         VarGlob.alto_mundo = (row_index_r + 1) * 32
-        print(VarGlob.ancho_mundo, VarGlob.alto_mundo)
         
     
     def cargar_partida(self):
         tipos_tile= {
-            "r": Via_recta,
-            "c": Via_codo,
-            "b": Via_bifurcada
+            "a": [Via_recta, 0],
+            "b": [Via_recta, 1],
+            "c": [Via_codo, 0],
+            "d": [Via_codo, 1],
+            "e": [Via_codo, 2],
+            "f": [Via_codo, 3],
+            "g": [Via_bifurcada, 0],
+            "h": [Via_bifurcada, 1],
+            "i": [Via_bifurcada, 2],
+            "j": [Via_bifurcada, 3]
         }
         for row_index_r, row in enumerate(self.partida_guardada):
             for col_index_r, col in enumerate(row):
                 if col in tipos_tile:
                     x = col_index_r * 32
                     y = row_index_r * 32
-                    tipos_tile[col]((x, y), [self.sprites_de_fondo, self.obstaculo])
+                    clase_tile, rot = tipos_tile[col]
+                    clase_tile((x, y), [self.sprites_de_fondo, self.obstaculo],rot)
+                    print(rot)
 
     def movimiento_camara(self, offset_x=0, offset_y=0):
         self.sprites_de_fondo.update()
@@ -91,16 +99,36 @@ class Nivel:
             return
         fila, columna = tile[1], tile[2]
         tile_x, tile_y = fila * 32, columna * 32
-        
-        if VarGlob.modo_const_via_recta == True:
-            tile = Via_recta((tile_x, tile_y), [self.sprites_de_fondo, self.obstaculo])
-            self.partida_guardada[columna][fila] = "r"
-        if VarGlob.modo_const_via_codo == True:
-            tile = Via_codo((tile_x, tile_y), [self.sprites_de_fondo, self.obstaculo])
-            self.partida_guardada[columna][fila] = "c"
+        rot = VarGlob.modo_const_rotada
+        if VarGlob.modo_const_via_recta == True: # Vía recta
+            if rot == 0 or rot == 2:
+                tile = Via_recta((tile_x, tile_y), [self.sprites_de_fondo, self.obstaculo], 0)
+                self.partida_guardada[columna][fila] = "a"
+            if rot == 1 or rot == 3:
+                tile = Via_recta((tile_x, tile_y), [self.sprites_de_fondo, self.obstaculo], 1)
+                self.partida_guardada[columna][fila] = "b"
+
+        if VarGlob.modo_const_via_codo == True: # Vía codo
+            tile = Via_codo((tile_x, tile_y), [self.sprites_de_fondo, self.obstaculo], rot)
+            if rot == 0:
+                self.partida_guardada[columna][fila] = "c"
+            elif rot == 1:
+                self.partida_guardada[columna][fila] = "d"
+            elif rot == 2:
+                self.partida_guardada[columna][fila] = "e"
+            elif rot == 3:
+                self.partida_guardada[columna][fila] = "f"
+
         if VarGlob.modo_const_via_bifurcada == True:
-            tile = Via_bifurcada((tile_x, tile_y), [self.sprites_de_fondo, self.obstaculo])
-            self.partida_guardada[columna][fila] = "b"
+            tile = Via_bifurcada((tile_x, tile_y), [self.sprites_de_fondo, self.obstaculo], rot)
+            if rot == 0:
+                self.partida_guardada[columna][fila] = "g"
+            elif rot == 1:
+                self.partida_guardada[columna][fila] = "h"
+            elif rot == 2:
+                self.partida_guardada[columna][fila] = "i"
+            elif rot == 3:
+                self.partida_guardada[columna][fila] = "j"
 
         self.guardar_mapa_csv("partida_guardada.csv")
 
@@ -115,15 +143,8 @@ class Nivel:
             fila, columna = tile[1], tile[2]
             self.partida_guardada[columna][fila] = ""
             self.guardar_mapa_csv("partida_guardada.csv")
-            if tile[0] == "r":
+            tipo_tile = [Via_recta, Via_codo, Via_bifurcada]
+            for i in range(0,3,1):
                 for sprite in self.obstaculo:
-                    if isinstance(sprite, Via_recta) and sprite.rect.topleft == (fila * 32, columna * 32):
-                        sprite.kill()
-            elif tile[0] == "c":
-                for sprite in self.obstaculo:
-                    if isinstance(sprite, Via_codo) and sprite.rect.topleft == (fila * 32, columna * 32):
-                        sprite.kill()
-            elif tile[0] == "b":
-                for sprite in self.obstaculo:
-                    if isinstance(sprite, Via_bifurcada) and sprite.rect.topleft == (fila * 32, columna * 32):
+                    if isinstance(sprite, tipo_tile[i]) and sprite.rect.topleft == (fila * 32, columna * 32):
                         sprite.kill()

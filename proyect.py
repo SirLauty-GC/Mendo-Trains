@@ -43,6 +43,13 @@ class Juego:
                             VarGlob.modo_const_via_recta, VarGlob.modo_const_via_codo = False, False
 
                     if event.key == pygame.K_w:
+                        if VarGlob.modo_construccion == True:
+                            if VarGlob.modo_const_rotada < 3:
+                                VarGlob.modo_const_rotada = VarGlob.modo_const_rotada + 1
+                            else:
+                                VarGlob.modo_const_rotada = 0
+                            print(VarGlob.modo_const_rotada)
+
                         if VarGlob.modo_construccion == False:
                             VarGlob.modo_demolicion = not VarGlob.modo_demolicion
                     
