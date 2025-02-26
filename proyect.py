@@ -27,7 +27,7 @@ class Juego:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_q:
                         VarGlob.modo_construccion = not VarGlob.modo_construccion
-                        VarGlob.modo_demolicion = False
+                        VarGlob.modo_demolicion, VarGlob.modo_const_via_recta, VarGlob.modo_const_via_codo, VarGlob.modo_const_via_bifurcada = False, False, False, False
 
                     if event.key == pygame.K_1:
                         if VarGlob.modo_construccion == True:
