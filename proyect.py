@@ -28,9 +28,23 @@ class Juego:
                     if event.key == pygame.K_q:
                         VarGlob.modo_construccion = not VarGlob.modo_construccion
                         VarGlob.modo_demolicion = False
+
+                    if event.key == pygame.K_1:
+                        if VarGlob.modo_construccion == True:
+                            VarGlob.modo_const_via_recta = not VarGlob.modo_const_via_recta
+                            VarGlob.modo_const_via_codo, VarGlob.modo_const_via_bifurcada = False, False
+                    if event.key == pygame.K_2:
+                        if VarGlob.modo_construccion == True:
+                            VarGlob.modo_const_via_codo = not VarGlob.modo_const_via_codo
+                            VarGlob.modo_const_via_recta, VarGlob.modo_const_via_bifurcada = False, False
+                    if event.key == pygame.K_3:
+                        if VarGlob.modo_construccion == True:
+                            VarGlob.modo_const_via_bifurcada = not VarGlob.modo_const_via_bifurcada
+                            VarGlob.modo_const_via_recta, VarGlob.modo_const_via_codo = False, False
+
                     if event.key == pygame.K_w:
-                        VarGlob.modo_demolicion = not VarGlob.modo_demolicion
-                        VarGlob.modo_construccion = False
+                        if VarGlob.modo_construccion == False:
+                            VarGlob.modo_demolicion = not VarGlob.modo_demolicion
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                         

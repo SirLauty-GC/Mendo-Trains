@@ -1,12 +1,15 @@
 import pygame
 import csv
 import numpy as np
+import VarGlob
 from objets.terreno.mar import Mar
 from objets.terreno.montana import Montana
 from objets.terreno.colina import Colina
 from objets.terreno.arena import Arena
 from objets.terreno.pasto import Pasto
-from objets.terreno.via import Via
+from objets.terreno.vias.via_recta import Via_recta
+from objets.terreno.vias.via_codo import Via_codo
+from objets.terreno.vias.via_bifurcada import Via_bifurcada
 
 def leer_mapa(ruta):
     with open(ruta, newline='') as archivo:
@@ -41,7 +44,9 @@ class Nivel:
     
     def cargar_partida(self):
         tipos_tile= {
-            "v": Via
+            "r": Via_recta,
+            "c": Via_codo,
+            "b": Via_bifurcada
         }
         for row_index_r, row in enumerate(self.partida_guardada):
             for col_index_r, col in enumerate(row):
@@ -66,21 +71,6 @@ class Nivel:
             return self.mapa[tile_y][tile_x], tile_x, tile_y
         return None
     
-    def construir_via(self, tile):
-        if tile[0] == 'a':
-            return
-        fila, columna = tile[1], tile[2]
-        tile_x, tile_y = fila * 32, columna * 32
-        tile = Via((tile_x, tile_y), [self.sprites_de_fondo, self.obstaculo])
-        self.partida_guardada[columna][fila] = "v"
-        self.guardar_mapa_csv("partida_guardada.csv")
-
-    def guardar_mapa_csv(self, archivo_csv):
-        ruta_completa = f"./partidas/{archivo_csv}"
-        with open(ruta_completa, "w", newline='', encoding="utf-8") as f:
-            writer = csv.writer(f)
-            writer.writerows(self.partida_guardada)
-    
     def detectar_via(self, mouse_x, mouse_y, offset_x, offset_y):
         global_x = mouse_x - offset_x
         global_y = mouse_y - offset_y
@@ -91,12 +81,45 @@ class Nivel:
         if 0 <= tile_y < len(self.partida_guardada) and 0 <= tile_x < len(self.partida_guardada[0]):
             return self.partida_guardada[tile_y][tile_x], tile_x, tile_y
         return None
+    
+    def construir_via(self, tile):
+        if tile[0] == 'a':
+            return
+        fila, columna = tile[1], tile[2]
+        tile_x, tile_y = fila * 32, columna * 32
+        
+        if VarGlob.modo_const_via_recta == True:
+            tile = Via_recta((tile_x, tile_y), [self.sprites_de_fondo, self.obstaculo])
+            self.partida_guardada[columna][fila] = "r"
+        if VarGlob.modo_const_via_codo == True:
+            tile = Via_codo((tile_x, tile_y), [self.sprites_de_fondo, self.obstaculo])
+            self.partida_guardada[columna][fila] = "c"
+        if VarGlob.modo_const_via_bifurcada == True:
+            tile = Via_bifurcada((tile_x, tile_y), [self.sprites_de_fondo, self.obstaculo])
+            self.partida_guardada[columna][fila] = "b"
+
+        self.guardar_mapa_csv("partida_guardada.csv")
+
+    def guardar_mapa_csv(self, archivo_csv):
+        ruta_completa = f"./partidas/{archivo_csv}"
+        with open(ruta_completa, "w", newline='', encoding="utf-8") as f:
+            writer = csv.writer(f)
+            writer.writerows(self.partida_guardada)
 
     def desstruir_via(self, tile):
-        if tile[0] == 'v':
+        if tile[0] != "":
             fila, columna = tile[1], tile[2]
             self.partida_guardada[columna][fila] = ""
             self.guardar_mapa_csv("partida_guardada.csv")
-            for sprite in self.obstaculo:
-                if isinstance(sprite, Via) and sprite.rect.topleft == (fila * 32, columna * 32):
-                    sprite.kill()
+            if tile[0] == "r":
+                for sprite in self.obstaculo:
+                    if isinstance(sprite, Via_recta) and sprite.rect.topleft == (fila * 32, columna * 32):
+                        sprite.kill()
+            elif tile[0] == "c":
+                for sprite in self.obstaculo:
+                    if isinstance(sprite, Via_codo) and sprite.rect.topleft == (fila * 32, columna * 32):
+                        sprite.kill()
+            elif tile[0] == "b":
+                for sprite in self.obstaculo:
+                    if isinstance(sprite, Via_bifurcada) and sprite.rect.topleft == (fila * 32, columna * 32):
+                        sprite.kill()

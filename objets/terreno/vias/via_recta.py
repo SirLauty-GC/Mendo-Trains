@@ -1,5 +1,5 @@
 import pygame 
-class Via(pygame.sprite.Sprite):
+class Via_recta(pygame.sprite.Sprite):
     def __init__(self, pos, groups):
         super().__init__(groups)
 
