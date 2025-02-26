@@ -4,6 +4,7 @@ from objets.interfaz.boton_construccion import Boton_constr
 from objets.interfaz.boton_via_recta import Boton_via_recta
 from objets.interfaz.boton_via_codo import Boton_via_codo
 from objets.interfaz.boton_via_bifurcada import Boton_via_bifurcada
+from objets.interfaz.boton_constr_rotar import Boton_constr_rotar
 from objets.interfaz.boton_demolicion import Boton_demol
 from objets.interfaz.boton_resetear_camara import Boton_resetear_camara
 from objets.interfaz.boton_vacio import Boton_vacio
@@ -39,16 +40,17 @@ class Interfaz:
             7 : (self.screen, self.x + 16, self.y + 454, self.sprite_boton_siete),
             8 : (self.screen, self.x + 16, self.y + 528, self.sprite_boton_ocho)
         }
+        for i in range(1,9,1):
+            Boton_vacio(*botones_ubicacion[i])
+
         if VarGlob.modo_construccion == False & VarGlob.modo_demolicion == False:
             Boton_constr(*botones_ubicacion[1])
             Boton_demol(*botones_ubicacion[2])
             Boton_resetear_camara(*botones_ubicacion[5])
 
-        for i in range(3,9,1):
-            Boton_vacio(*botones_ubicacion[i])
-
         if VarGlob.modo_construccion:
             Boton_constr(*botones_ubicacion[1])
-            Boton_via_recta(*botones_ubicacion[2])
-            Boton_via_codo(*botones_ubicacion[3])
-            Boton_via_bifurcada(*botones_ubicacion[4])
+            Boton_constr_rotar(*botones_ubicacion[2])
+            Boton_via_recta(*botones_ubicacion[3])
+            Boton_via_codo(*botones_ubicacion[4])
+            Boton_via_bifurcada(*botones_ubicacion[5])
