@@ -5,6 +5,7 @@ from objets.interfaz.boton_via_recta import Boton_via_recta
 from objets.interfaz.boton_via_codo import Boton_via_codo
 from objets.interfaz.boton_via_bifurcada import Boton_via_bifurcada
 from objets.interfaz.boton_demolicion import Boton_demol
+from objets.interfaz.boton_resetear_camara import Boton_resetear_camara
 from objets.interfaz.boton_vacio import Boton_vacio
 
 class Interfaz:
@@ -41,6 +42,7 @@ class Interfaz:
         if VarGlob.modo_construccion == False & VarGlob.modo_demolicion == False:
             Boton_constr(*botones_ubicacion[1])
             Boton_demol(*botones_ubicacion[2])
+            Boton_resetear_camara(*botones_ubicacion[5])
 
         for i in range(3,9,1):
             Boton_vacio(*botones_ubicacion[i])

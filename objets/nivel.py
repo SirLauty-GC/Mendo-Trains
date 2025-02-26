@@ -41,6 +41,10 @@ class Nivel:
                     x = col_index_r * 32
                     y = row_index_r * 32
                     tipos_terreno[col]((x, y), [self.sprites_de_fondo, self.obstaculo])
+        VarGlob.ancho_mundo = (col_index_r + 1) * 32
+        VarGlob.alto_mundo = (row_index_r + 1) * 32
+        print(VarGlob.ancho_mundo, VarGlob.alto_mundo)
+        
     
     def cargar_partida(self):
         tipos_tile= {

@@ -45,6 +45,10 @@ class Juego:
                     if event.key == pygame.K_w:
                         if VarGlob.modo_construccion == False:
                             VarGlob.modo_demolicion = not VarGlob.modo_demolicion
+                    
+                    if event.key == pygame.K_t:
+                        VarGlob.offset_x = 0
+                        VarGlob.offset_y = 0
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                         
@@ -65,13 +69,17 @@ class Juego:
             mouse_x, mouse_y = pygame.mouse.get_pos()
 
             if mouse_x < limite_pantalla:  # Izquierda
-                VarGlob.offset_x += velocidad_camara
+                if VarGlob.offset_x < 0:
+                    VarGlob.offset_x += velocidad_camara
             if mouse_x > VarGlob.ancho_pantalla - limite_pantalla:  # Derecha
-                VarGlob.offset_x -= velocidad_camara
+                if VarGlob.offset_x > VarGlob.ancho_pantalla - VarGlob.ancho_mundo:
+                    VarGlob.offset_x -= velocidad_camara
             if mouse_y < limite_pantalla:  # Arriba
-                VarGlob.offset_y += velocidad_camara
+                if VarGlob.offset_y < 0:
+                    VarGlob.offset_y += velocidad_camara
             if mouse_y > VarGlob.alto_pantalla - limite_pantalla:  # Abajo
-                VarGlob.offset_y -= velocidad_camara
+                if VarGlob.offset_y > VarGlob.alto_pantalla - VarGlob.alto_mundo:
+                    VarGlob.offset_y -= velocidad_camara
             
             screen.fill("black")
 
